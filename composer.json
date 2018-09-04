@@ -1,0 +1,30 @@
+{
+    "name": "godstorm91/omnipay-komoju",
+    "type": "library",
+    "description": "Komoju driver for the Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "komoju"
+    ],
+    "homepage": "https://github.com/godstorm91/omnipay-komoju",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Khanh Nguyen",
+            "email": "godstorm91@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Omnipay\\Komoju\\" : "src/" }
+    },
+    "require": {
+        "omnipay/common": "~3.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~3.0"
+    }
+}
