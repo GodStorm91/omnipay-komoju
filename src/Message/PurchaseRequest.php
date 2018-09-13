@@ -25,6 +25,12 @@ class PurchaseRequest extends AbstractRequest
         $data['transaction[cancel_url]'] = $this->getCancelUrl();
         $data['transaction[currency]'] = strtoupper($this->getCurrency());
         $data['transaction[external_order_num]'] = $this->getTransactionReference();
+        $data['transaction[customer][given_name]'] = $this->getCustomerGivenName();
+        $data['transaction[customer][given_name_kana]'] = $this->getCustomerFamilyNameKana();
+        $data['transaction[customer][family_name]'] = $this->getCustomerFamilyName();
+        $data['transaction[customer][family_name_kana]'] = $this->getCustomerFamilyNameKana();
+        $data['transaction[customer][email]'] = $this->getCustomerEmail();
+        $data['transaction[customer][phone]'] = $this->getCustomerPhone();
         $data['transaction[return_url]'] = $this->getReturnUrl();
         $data['transaction[tax]'] = $this->getTax();
         return $data;

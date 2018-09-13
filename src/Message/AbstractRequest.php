@@ -2,6 +2,7 @@
 /**
  * Komoju Abstract Request
  */
+
 namespace Omnipay\Komoju\Message;
 /**
  * Komoju Abstract Request
@@ -24,6 +25,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      * @var string
      */
     protected $testUrl = 'https://sandbox.komoju.com';
+
     /**
      * Get the API Key
      *
@@ -33,6 +35,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('apiKey');
     }
+
     /**
      * Set the API Key
      *
@@ -43,6 +46,125 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('apiKey', $value);
     }
+
+    /**
+     * Get the customer family name
+     * @return mixed
+     */
+    public function getCustomerFamilyName()
+    {
+        return $this->getParameter('customerFamilyName');
+    }
+
+    /**
+     * Set customer family name
+     * @param $value
+     * @return mixed
+     */
+    public function setCustomerFamilyName($value)
+    {
+        return $this->setParameter('customerFamilyName', $value);
+    }
+
+    /**
+     * Get the customer family name kana
+     * @return mixed
+     */
+    public function getCustomerFamilyNameKana()
+    {
+        return $this->getParameter('customerFamilyNameKana');
+    }
+
+    /**
+     * Set customer family name kana
+     * @param $value
+     * @return mixed
+     */
+    public function setCustomerFamilyNameKana($value)
+    {
+        return $this->setParameter('customerFamilyNameKana', $value);
+    }
+
+    /**
+     * Get the customer given name
+     * @return mixed
+     */
+    public function getCustomerGivenName()
+    {
+        return $this->getParameter('customerGivenName');
+    }
+
+    /**
+     * Set customer given name
+     * @param $value
+     * @return mixed
+     */
+    public function setCustomerGivenName($value)
+    {
+        return $this->setParameter('customerGivenName', $value);
+    }
+
+    /**
+     * Get the customer given name kana
+     * @return mixed
+     */
+    public function getCustomerGivenNameKana()
+    {
+        return $this->getParameter('customerGivenNameKana');
+    }
+
+    /**
+     * Set customer given name kana
+     * @param $value
+     * @return mixed
+     */
+    public function setCustomerGivenNameKana($value)
+    {
+        return $this->setParameter('customerGivenNameKana', $value);
+    }
+
+    /**
+     * Get the email
+     *
+     * @return mixed
+     */
+    public function getCustomerEmail()
+    {
+        return $this->getParameter('customerEmail');
+    }
+
+    /**
+     * Set the email
+     *
+     * @param $value
+     * @return AbstractRequest Provides a fluent interface
+     */
+    public function setCustomerEmail($value)
+    {
+        return $this->setParameter('customerEmail', $value);
+    }
+
+    /**
+     * Get the customer phone
+     *
+     * @return mixed
+     */
+    public function getCustomerPhone()
+    {
+        return $this->getParameter('customerPhone');
+    }
+
+    /**
+     * Set the customer phone
+     *
+     * @param $value
+     * @return AbstractRequest Provides a fluent interface
+     */
+    public function setCustomerPhone($value)
+    {
+        return $this->setParameter('customerPhone', $value);
+    }
+
     /**
      * Get the tax.
      *
@@ -52,6 +174,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('tax');
     }
+
     /**
      * Set the tax.
      *
@@ -62,6 +185,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('tax', $value);
     }
+
     /**
      * Get the account ID.
      *
@@ -71,6 +195,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('accountId');
     }
+
     /**
      * Set the account ID.
      *
@@ -81,6 +206,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('accountId', $value);
     }
+
     /**
      * Get the payment method.
      *
@@ -90,6 +216,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('paymentMethod');
     }
+
     /**
      * Set the payment method.
      *
@@ -100,6 +227,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('paymentMethod', $value);
     }
+
     /**
      * Get the locale.
      *
@@ -109,6 +237,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('locale');
     }
+
     /**
      * Set the locale.
      *
@@ -119,6 +248,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('locale', $value);
     }
+
     /**
      * Get the timestamp.
      *
@@ -129,6 +259,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $timestamp = $this->getParameter('timestamp');
         return !empty($timestamp) ? $timestamp : time();
     }
+
     /**
      * Set the timestamp.
      *
@@ -139,6 +270,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('timestamp', $value);
     }
+
     /**
      * Send the request with specified data
      *
@@ -147,11 +279,18 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $endpoint = $this->getEndpoint() . '?' . http_build_query($data, '', '&');
+        $params = array();
+        foreach ($data as $key => $val) {
+            $params[] = urlencode($key) . '=' . urlencode($val);
+        }
+        sort($params);
+        $queryString = implode('&', $params);
+        $endpoint = $this->getEndpoint() . '?' . $queryString;
         $hmac = hash_hmac('sha256', $endpoint, $this->getApiKey());
         $url = $this->getBaseUrl() . $endpoint . '&hmac=' . $hmac;
         return $this->response = new PurchaseResponse($this, $data, $url);
     }
+
     /**
      * Retrieve the appropriate base URL.
      *
@@ -161,6 +300,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getTestMode() ? $this->testUrl : $this->liveUrl;
     }
+
     /**
      * Generate the endpoint based on the current options.
      *
