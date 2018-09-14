@@ -30,10 +30,10 @@ class GatewayTest extends GatewayTestCase
         $timestamp = time();
         $request = $this->gateway->purchase(array(
             'amount' => '130',
-            'customer_family_name' => 'Vu',
-            'customer_family_name_kana' => 'Vu',
-            'customer_given_name' => 'Huan',
-            'customer_given_name_kana' => 'Huan',
+            'customer_family_name' => 'John',
+            'customer_family_name_kana' => 'John',
+            'customer_given_name' => 'Smith',
+            'customer_given_name_kana' => 'Smith',
             'customer_email' => 'test@email.com',
             'customer_phone' => '0123456789',
             'cancel_url' => 'http://www.google.com',
@@ -45,15 +45,15 @@ class GatewayTest extends GatewayTestCase
         ));
         $this->assertInstanceOf('\Omnipay\Komoju\Message\PurchaseRequest', $request);
         $this->assertSame('130', $request->getAmount());
-        $this->assertSame('Vu', $request->getCustomerFamilyName());
-        $this->assertSame('Vu', $request->getCustomerFamilyNameKana());
-        $this->assertSame('Huan', $request->getCustomerGivenName());
-        $this->assertSame('Huan', $request->getCustomerGivenNameKana());
+        $this->assertSame('John', $request->getCustomerFamilyName());
+        $this->assertSame('John', $request->getCustomerFamilyNameKana());
+        $this->assertSame('Smith', $request->getCustomerGivenName());
+        $this->assertSame('Smith', $request->getCustomerGivenNameKana());
         $this->assertSame('test@email.com', $request->getCustomerEmail());
         $this->assertSame('0123456789', $request->getCustomerPhone());
         $this->assertSame('http://www.google.com', $request->getCancelUrl());
         $this->assertSame('http://www.yahoo.com', $request->getReturnUrl());
-        $this->assertSame('USD', $request->getCurrency());
+        $this->assertSame('JPY', $request->getCurrency());
         $this->assertSame('0', $request->getTax());
         $this->assertSame('1', $request->getTransactionReference());
         $this->assertSame($timestamp, $request->getTimestamp());
