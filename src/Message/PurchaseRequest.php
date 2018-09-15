@@ -4,6 +4,9 @@
  */
 
 namespace Omnipay\Komoju\Message;
+
+use Omnipay\Common\Http\Exception;
+
 /**
  * Komoju Purchase Request
  *
@@ -12,12 +15,13 @@ namespace Omnipay\Komoju\Message;
  */
 class PurchaseRequest extends AbstractRequest
 {
-    const PAYMENT_URL = 'https://komoju.com/api/v1/payments';
+    const PAYMENT_API_URL = 'https://komoju.com/api/v1/payments';
+
+    protected $requestHeader;
 
     /**
-     * Assemble the data to send with the request.
-     *
-     * @return array
+     * @return array|mixed
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function getData()
     {
@@ -62,26 +66,34 @@ class PurchaseRequest extends AbstractRequest
 
     private function createResponse()
     {
-        $post = [
+        $params = [
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
             'payment_details' => $this->getToken(),
         ];
         $apiKey = $this->getApiKey();
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, PurchaseRequest::PAYMENT_URL);
-        curl_setopt($ch, CURLOPT_USERPWD, "$apiKey:");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $result = curl_exec($ch);
-        curl_close($ch);
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, PurchaseRequest::PAYMENT_API_URL);
+            curl_setopt($ch, CURLOPT_USERPWD, "$apiKey:");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $result = curl_exec($ch);
 
-        $json = json_decode($result, true);
-
-        return $this->response = new PurchaseResponse($this, $json);
+            $header = curl_getinfo($ch);
+            $body = json_decode($result, true);
+            return $this->response = new PurchaseResponse($this, $header, $body);
+        } catch (Exception $ex) {
+            $error = ['error' => [
+                'code' => 'bad_request',
+                'message' => $ex->getMessage(),
+                'param' => '',
+            ]];
+            return $this->response = new PurchaseResponse($this, ['http_code' => 500], $error);
+        }
     }
 
     private function createHostedGatewayResponse($data)

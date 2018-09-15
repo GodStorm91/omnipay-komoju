@@ -19,10 +19,14 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Omnipay\\Komoju\\" : "src/" }
+        "psr-4": {
+            "Omnipay\\Komoju\\": "src/"
+        }
     },
     "require": {
-        "omnipay/common": "~3.0"
+        "omnipay/common": "~3.0",
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "omnipay/tests": "~3.0"

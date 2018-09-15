@@ -11,6 +11,44 @@ use Omnipay\Common\Message\RequestInterface;
 
 /*
  * Sample response object:
+ :---------------------:credit_card:---------------------:
+array (
+  'id' => '3dbxep0m999khw1np0oj6n2n9',
+  'resource' => 'payment',
+  'status' => 'captured',
+  'amount' => 1000,
+  'tax' => 1,
+  'customer' => NULL,
+  'payment_deadline' => '2018-09-22T14:59:59Z',
+  'payment_details' =>
+  array (
+    'type' => 'credit_card',
+    'email' => 'huanvn@gmail.com',
+    'brand' => 'master',
+    'last_four_digits' => '4444',
+    'month' => 10,
+    'year' => 2022,
+  ),
+  'payment_method_fee' => 0,
+  'total' => 1001,
+  'currency' => 'JPY',
+  'description' => NULL,
+  'captured_at' => '2018-09-15T12:50:51Z',
+  'external_order_num' => NULL,
+  'metadata' =>
+  array (
+  ),
+  'created_at' => '2018-09-15T12:50:50Z',
+  'amount_refunded' => 0,
+  'locale' => 'ja',
+  'refunds' =>
+  array (
+  ),
+  'refund_requests' =>
+  array (
+  ),
+)
+:---------------------:konbini:---------------------:
 {
    "customer" : null,
    "payment_method_fee" : 185,
@@ -51,34 +89,40 @@ use Omnipay\Common\Message\RequestInterface;
  */
 class PurchaseResponse extends AbstractResponse
 {
+    const STATUS_AUTHORIZED = "authorized";
+    const STATUS_CAPTURED = "captured";
 
+    protected $request;
+    protected $header;
     protected $data;
 
     /**
      * PurchaseResponse constructor.
      * @param RequestInterface $request
+     * @param $header
      * @param $data
      */
-
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(RequestInterface $request, $header, $data)
     {
         $this->request = $request;
+        $this->header = $header;
         $this->data = $data;
     }
 
     public function isSuccessful()
     {
-        return true;
+        // https://docs.komoju.com/en/api/overview/#http_status_codes
+        return isset($this->header['http_code']) && $this->header['http_code'] < 400;
     }
 
     /**
-     * Payment will be consider as a pending status. Additional webhook request will update detail payment status later
+     * A success request will return payment as Authorized or Captured
      *
      * @return bool
      */
     public function isPending()
     {
-        return true;
+        return isset($this->data['status']) ?  $this->data['status'] != PurchaseResponse::STATUS_CAPTURED : false;
     }
 
     /**
