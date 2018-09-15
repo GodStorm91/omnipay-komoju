@@ -26,6 +26,7 @@ class Gateway extends AbstractGateway
         return array(
             'apiKey' => '',
             'accountId' => '',
+            'token' => '',
             'paymentMethod' => 'credit_card',
             'testMode' => true,
             'locale' => 'ja'
@@ -42,9 +43,19 @@ class Gateway extends AbstractGateway
         return $this->setParameter('apiKey', $value);
     }
 
+    public function getToken()
+    {
+        return $this->getParameter('token');
+    }
+
+    public function setToken($value)
+    {
+        return $this->setParameter('token', $value);
+    }
+
     public function getCustomerFamilyName()
     {
-        return $this . $this->getParameter('customerFamilyName');
+        return $this->getParameter('customerFamilyName');
     }
 
     public function setCustomerFamilyName($value)
@@ -54,7 +65,7 @@ class Gateway extends AbstractGateway
 
     public function getCustomerFamilyNameKana()
     {
-        return $this . $this->getParameter('customerFamilyNameKana');
+        return $this->getParameter('customerFamilyNameKana');
     }
 
     public function setCustomerFamilyNameKana($value)
@@ -64,7 +75,7 @@ class Gateway extends AbstractGateway
 
     public function getCustomerGivenName()
     {
-        return $this . $this->getParameter('customerGivenName');
+        return $this->getParameter('customerGivenName');
     }
 
     public function setCustomerGivenName($value)
@@ -74,7 +85,7 @@ class Gateway extends AbstractGateway
 
     public function getCustomerGivenNameKana()
     {
-        return $this . $this->getParameter('customerGivenNameKana');
+        return $this->getParameter('customerGivenNameKana');
     }
 
     public function setCustomerGivenNameKana($value)
@@ -146,18 +157,4 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest('\Omnipay\Komoju\Message\PurchaseRequest', $parameters);
     }
-    /*
-    public function refund(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Komoju\Message\RefundRequest', $parameters);
-    }
-    public function fetchTransaction(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Komoju\Message\FetchTransactionRequest', $parameters);
-    }
-    public function fetchToken(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Komoju\Message\FetchTokenRequest', $parameters);
-    }
-    */
 }

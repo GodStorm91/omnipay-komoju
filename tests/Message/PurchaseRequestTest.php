@@ -22,7 +22,7 @@ class PurchaseRequestTest extends TestCase
     {
         $timestamp = time();
         $response = $this->initializeRequest()->send();
-        $this->assertInstanceOf('Omnipay\Komoju\Message\PurchaseResponse', $response);
+        $this->assertInstanceOf('Omnipay\Komoju\Message\HostedGatewayResponse', $response);
         $this->assertFalse($response->isSuccessful());
         $this->assertTrue($response->isRedirect());
         $this->assertContains('https://sandbox.komoju.com/en/api/myaccountid/transactions/credit_card/new?timestamp=' . $timestamp . '&transaction%5Bamount%5D=1000&transaction%5Bcancel_url%5D=http%3A%2F%2Fwww.google.com&transaction%5Bcurrency%5D=USD&transaction%5Bexternal_order_num%5D=1&transaction%5Breturn_url%5D=http%3A%2F%2Fwww.yahoo.com&transaction%5Btax%5D=0', $response->getRedirectUrl());

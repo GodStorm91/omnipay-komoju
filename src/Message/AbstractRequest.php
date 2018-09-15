@@ -48,6 +48,23 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     }
 
     /**
+     * Get payment details token
+     * @return mixed
+     */
+    public function getPaymentDetailsToken() {
+        return $this->getParameter('payment_details');
+    }
+
+    /**
+     * Set payment details token
+     * @param $value
+     * @return AbstractRequest
+     */
+    public function setPaymentDetailsToken($value) {
+        return $this->setParameter('payment_details', $value);
+    }
+
+    /**
      * Get the customer family name
      * @return mixed
      */
@@ -269,26 +286,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setTimestamp($value)
     {
         return $this->setParameter('timestamp', $value);
-    }
-
-    /**
-     * Send the request with specified data
-     *
-     * @param  mixed $data The data to send
-     * @return PurchaseResponse
-     */
-    public function sendData($data)
-    {
-        $params = array();
-        foreach ($data as $key => $val) {
-            $params[] = urlencode($key) . '=' . urlencode($val);
-        }
-        sort($params);
-        $queryString = implode('&', $params);
-        $endpoint = $this->getEndpoint() . '?' . $queryString;
-        $hmac = hash_hmac('sha256', $endpoint, $this->getApiKey());
-        $url = $this->getBaseUrl() . $endpoint . '&hmac=' . $hmac;
-        return $this->response = new PurchaseResponse($this, $data, $url);
     }
 
     /**
